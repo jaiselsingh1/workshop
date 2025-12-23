@@ -23,6 +23,7 @@
 import numpy as np  
 from scipy import signal 
 
+# Base layer class
 class Layer:
     def __init__(self):
         self.input = None 
@@ -74,7 +75,24 @@ class Convolutional(Layer):
 
             self.kernels -= learning_rate * kernels_gradient
             self.biases -= learning_rate * output_gradient
+            # the bias gradient == output_gradient itself which is an input 
         return input_gradient
 
+    class Reshape(Layer):
+        def __input__(self, input_shape, output_shape):
+            self.input_shape = input_shape 
+            self.output_shape = output_shape 
 
+        def forward(self, input):
+            # reshapes the input to the ouput shape
+            return np.reshape(input, self.output_shape)
+        
+        def backward(self, output_gradient, learning_rate):
+            # reshapes the output back to the input shape
+            return np.reshape(output_gradient, self.input_shape)
 
+def binary_cross_entropy(y_true, y_pred):
+    return np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+
+def binary_cross_entropy_prime(y_true, y_pred):
+    return ((1 - y_true) / (1 - y_pred) - y_true / y_pred) / np.size(y_true)
