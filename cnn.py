@@ -84,7 +84,7 @@ class Convolutional(Layer):
         return input_gradient
 
 class Reshape(Layer):
-    def __init__(self, input_shape, output_shape):  # Fixed typo: __input__ -> __init__
+    def __init__(self, input_shape, output_shape):  
         self.input_shape = input_shape 
         self.output_shape = output_shape 
 
