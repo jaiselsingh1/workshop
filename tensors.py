@@ -50,3 +50,33 @@ print(new_tensor)
 # Use cat() when you want to extend an existing dimension (like appending to a list)
 # Use stack() when you want to batch tensors together or create a new axis (like creating a batch dimension for training)
 
+# with stack() you maintain the current structure that you have 
+# torch.stack([state1, state2, ...], dim=0)
+
+# all 3 of these are equivalent
+y1 = tensor @ tensor.T
+y2 = torch.matmul(tensor, tensor.T)
+
+y3 = torch.rand_like(y1)
+torch.matmul(tensor, tensor.T, out=y3)
+
+# element wise is when you do torch.mul()
+# or you use the * operation 
+
+agg = torch.sum(tensor)
+agg_item = agg.item()
+print(agg_item, type(agg_item))
+
+# in torch there is a _ suffix for anything in place 
+
+x = torch.ones(2, 2)
+x.add_(5)
+
+# in place operations can save some memory but there usage is discouraged 
+# this is because they can have an immediate lose of history 
+# hence their derivatives/ backprop is impacted 
+
+# numpy arrays and torch tensors share the same memory on the cpu 
+# hence changing one inherently changes the thing that is underneath 
+
+
