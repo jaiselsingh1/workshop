@@ -80,17 +80,75 @@ train_features, train_labels = next(iter(train_dataloader))
 print(f"Feature batch shape: {train_features.size()}")
 print(f"Labels batch shape: {train_labels.size()}")
 
-img = train_features[0].squeeze 
+img = train_features[0].squeeze()
 label = train_labels[0]
 plt.imshow(img, cmap = "gray")
 plt.show()
 print(f"Label: {label}")
 
+# usually the data is not in the format that we want 
+# aka we usually want the features to be normalized tensors 
+# the labels as one hot encoded vectors 
+
+# the transform() function is usually just a ToTensor()
+# the target_transform is a Lambda which does turn the integer into a one-hot encoded tensor. It first creates a zero tensor of size 10 (the number of labels in our dataset) and calls scatter_ which assigns a value=1 on the index as given by the label y
 
 
+from torch import nn 
+class NeuralNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.flatten = nn.Flatten()
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(28*28, 512), 
+            nn.ReLU(), 
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 10),
+        )
 
+    def forward(self, x):
+        x = self.flatten(x)
+        logits = self.linear_relu_stack(x)
+        return logits 
         
-        
+device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
+print(f"Using {device} device")
+
+model = NeuralNetwork().to(device)
+# never call model.forward() directly 
+
+# dim = 0 always corresponds to the batch that you are doing 
+# this is the number of images that you are processing at once 
+
+# channels = 1 for GrayScale and 3 for RGB 
+x = torch.rand(1, 28, 28, device=device)
+logits = model(x)
+# the logits are just raw numbers 
+pred_prob = nn.Softmax(dim=1)(logits)
+y_pred = pred_prob.argmax(1)
+
+# the 1 here for the argmax is to get the value per image? 
+print(f"Predicted class: {y_pred}")
+
+# .flatten() always goes from dim=1 onwards 
+# assumes dim = 0 is the batch dim 
+
+input_image = torch.rand(3, 28, 28)
+flatten = nn.Flatten()
+flat_image = flatten(input_image)
+
+layer1 = nn.Linear(in_features=28*28, out_features=20)
+hidden1 = layer1(flat_image)
+
+hidden1 = nn.ReLU()(hidden1)
+# you create the ReLU() module first 
+# can't do nn.ReLU(hidden1)
+
+# The last linear layer of the neural network returns logits - raw values in [-infty, infty] - which are passed to the nn.Softmax module 
+
+for name, param in model.named_parameters():
+    print(f"Layer: {name} | Size: {param.size()} | Values : {param[:2]} \n")
 
 
 
