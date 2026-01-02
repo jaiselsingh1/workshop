@@ -72,7 +72,7 @@ model = NeuralNetwork().to(device)
 print(model)
 
 loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+optimizer = torch.optim.SGD(model.parameters(), momentum=0.9, lr=1e-3)
 
 def train(dataloader, model, loss_fn, optimizer):
     # in the training loop, the model does predictions on the training dataset and then backprops the pred error
