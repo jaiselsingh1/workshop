@@ -39,3 +39,14 @@ threshold = 0.02
 print("initial aligment")
 evaluation = o3d.pipelines.registration.evaluate_registration(source, target, threshold, trans_init)
 print(evaluation)
+
+# registration through the use of ICP 
+print("apply point to point")
+reg_p2p = o3d.pipelines.registratation_icp(
+    source, target, threshold, trans_init, 
+    o3d.pipelines.registration.TransformationEstimationPointToPoint()
+)
+
+print(reg_p2p)
+print(f"transformation is {reg_p2p.transformation}")
+draw_registration_result(source, target, reg_p2p.transformation)
