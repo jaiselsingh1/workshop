@@ -1,6 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 import open3d as o3d 
+import open2d as o2d
 import copy
 
 demo_pcds = o3d.data.DemoICPPointClouds()
