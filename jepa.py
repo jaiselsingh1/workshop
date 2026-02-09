@@ -32,15 +32,18 @@ class PatchEmbed(nn.Module):
         self.grid_size = img_size // patch_size
         self.num_patches = self.grid_size * self.grid_size
 
-        self.proj == nn.Conv2d(
+        # this is a learned module 
+        self.proj = nn.Conv2d(
             in_channels = in_chans, 
             out_channels = embed_dim, 
             stride = patch_size, 
-            kernel_size = patch_size
-            bias = True
+            kernel_size = patch_size,
+            bias = True,
         )
-
+    
+    # how the data flows through the module when you call y = patch_embed(x)
+    # apply proj and then reshape into tokens   
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.proj(x) # (B,D,G,G)
+        x = self.proj(x) # (B,D,G,G) 
         x = x.flatten(2).transpose(1, 2) # (B, N, D)
         return x
