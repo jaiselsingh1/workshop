@@ -47,3 +47,31 @@ class PatchEmbed(nn.Module):
         x = self.proj(x) # (B,D,G,G) 
         x = x.flatten(2).transpose(1, 2) # (B, N, D)
         return x
+
+class MultiHeadSelfAttention(nn.Module):
+    def __init__(
+            self, 
+            dim: int, 
+            num_heads: int, 
+            attn_drop: float = 0.0, 
+            proj_drop: float = 0.0, 
+    ):
+        super().__init__()
+        assert dim % num_heads == 0, "the dim must be divisible by the number of heads"
+
+        self.dim = dim 
+        self.num_heads = num_heads 
+        self.head_dim = dim // num_heads 
+        # scaling factor for the dot product attention 
+        self.scale = self.head_dim ** -0.5
+
+        self.qkv = nn.Linear(dim, 3*dim, bias=True)
+        self.attn_drop = nn.Dropout(attn_drop)
+        self.proj = nn.Linear(dim, dim, bias=True)
+        self.proj_drop = nn.Dropout(proj_drop)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        pass
+
+
+
