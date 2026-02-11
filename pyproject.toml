@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "workshop"
 version = "0.1.0"
@@ -12,8 +16,18 @@ dependencies = [
     "numpy>=2.4.0",
     "open3d>=0.19.0",
     "pandas>=2.3.3",
+    "rerun-sdk>=0.29.1",
     "scipy>=1.16.3",
     "tensorflow>=2.20.0",
     "torch>=2.9.1",
     "torchvision>=0.24.1",
 ]
+
+[project.scripts]
+rerun = "rerun_cli.__main__:main"
+
+[tool.uv]
+package = true
+
+[tool.setuptools]
+py-modules = []

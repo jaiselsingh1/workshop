@@ -62,7 +62,7 @@ class MultiHeadSelfAttention(nn.Module):
         self.dim = dim 
         self.num_heads = num_heads 
         self.head_dim = dim // num_heads 
-        # scaling factor for the dot product attention 
+        # scaling factor for the dot product attention prior to softmax
         self.scale = self.head_dim ** -0.5
 
         self.qkv = nn.Linear(dim, 3*dim, bias=True)
@@ -71,7 +71,24 @@ class MultiHeadSelfAttention(nn.Module):
         self.proj_drop = nn.Dropout(proj_drop)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        pass
+        B, T, D = x.shape 
+        # batch, time, embedding dimension 
+        # batch is the number of sequences that you are processing 
+        # T is the number of tokens within each batch 
+
+        qkv = self.qkv(x) # (B, T, 3D)
+        qkv = self.reshape(B, T, 3, self.num_heads, self.head_dim)
+        qkv = self.permute(2, 0, 3, 1, 4) # (3, B, H, T, Hd)
+        
+        
+
+
+
+
+
+
+
+
 
 
 
